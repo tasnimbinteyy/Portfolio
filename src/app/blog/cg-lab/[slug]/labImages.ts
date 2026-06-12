@@ -15,27 +15,30 @@ export const labImages: Record<string, Record<string, ImageEntry | ImageEntry[]>
 
   // ── LAB 2 ──────────────────────────────────────────────────────────────────
   "cg-lab-2-image-basics": {
+    // Task 1 — read & display
     "read-&-display-image": {
       type: "image",
       inputSrc: "/images/cg-lab/lab2_original.png",
       outputSrc: "/images/cg-lab/lab2_display.png",
-      inputLabel: "Strawberries — Fig0630 (BGR loaded)",
-      outputLabel: "Displayed correctly (BGR→RGB) + RGB Histogram",
-      caption: "OpenCV loads in BGR order — converting to RGB before display gives correct colors.",
+      inputLabel: "Strawberries — Fig0630 (BGR loaded by OpenCV)",
+      outputLabel: "Correctly displayed (BGR→RGB converted)",
+      caption: "OpenCV loads in BGR order — cv2.cvtColor(img, COLOR_BGR2RGB) fixes the colors before display.",
     },
+    // Task 2 — dimensions
     "image-dimensions-(rgb)": {
       type: "graph",
       graphVariant: "bar",
-      inputLabel: "Image Array Shape",
-      outputLabel: "RGB Channel Distribution",
-      caption: "Shape: (height, width, channels) — 3 channels for RGB/BGR, 1 for grayscale.",
+      inputLabel: "img.shape — (666, 666, 3)",
+      outputLabel: "3 Channels: R, G, B distribution",
+      caption: "img.shape returns (height=666, width=666, channels=3). Total pixels = 443,556. channels=3 means BGR color image.",
     },
+    // Task 5 — audio/video (Tasks 3 & 4 are code-only, no image needed)
     "read-audio-&-video": {
       type: "graph",
       graphVariant: "waveform",
-      inputLabel: "Audio File (.wav) — raw signal",
-      outputLabel: "Waveform Plot (amplitude vs time)",
-      caption: "Librosa reads audio as a 1D amplitude array. Sample rate = 22050 Hz by default.",
+      inputLabel: "Audio file (.wav) — raw signal",
+      outputLabel: "Waveform plot (amplitude vs time)",
+      caption: "librosa.load() reads audio as a 1D NumPy array. waveshow() plots amplitude over time.",
     },
   },
 
@@ -45,9 +48,9 @@ export const labImages: Record<string, Record<string, ImageEntry | ImageEntry[]>
       type: "image",
       inputSrc: "/images/cg-lab/lab3_xray_input.png",
       outputSrc: "/images/cg-lab/lab3_xray_complement.png",
-      inputLabel: "Breast X-Ray (Gonzalez Fig 3.4)",
-      outputLabel: "Complement — dark/light inverted",
-      caption: "Gonzalez Fig 3.5 — complement of X-ray reveals fine bone detail clearly.",
+      inputLabel: "Intensity Ramp (Gonzalez Fig 3.7a)",
+      outputLabel: "Complement — intensities inverted",
+      caption: "s = 255 − r — the complement of a ramp clearly shows how every intensity level gets flipped.",
     },
     "gamma-correction": {
       type: "image",

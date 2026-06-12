@@ -29,6 +29,7 @@ CAMERAMAN   = gp("DIP3E_CH02_Original_Images", "DIP3E_Original_Images_CH02", "Fi
 BLD_IMAGE   = gp("DIP3E_CH04_Original_Images", "DIP3E_Original_Images_CH04", "Fig0438(a)(bld_600by600).tif")
 STRAWBERRY_LAB2 = gp("DIP3E_CH06_Original_Images", "DIP3E_Original_Images_CH06", "Fig0630(01)(strawberries_fullcolor).tif")
 XRAY        = gp("DIP3E_CH03_Original_Images", "DIP3E_Original_Images_CH03", "Fig0304(a)(breast_digital_Xray).tif")
+INTENSITY_RAMP = gp("DIP3E_CH03_Original_Images", "DIP3E_Original_Images_CH03", "Fig0307(a)(intensity_ramp).tif")
 WASHED      = gp("DIP3E_CH03_Original_Images", "DIP3E_Original_Images_CH03", "Fig0309(a)(washed_out_aerial_image).tif")
 DFT_NOLOG   = gp("DIP3E_CH03_Original_Images", "DIP3E_Original_Images_CH03", "Fig0305(a)(DFT_no_log).tif")
 EINSTEIN_LO = gp("DIP3E_CH02_Original_Images", "DIP3E_Original_Images_CH02", "Fig0241(a)(einstein low contrast).tif")
@@ -118,12 +119,12 @@ if bld is not None:
 # ─────────────────────────────────────────────────────────────────────────────
 print("\n[Lab 3] Intensity Transformations")
 
-# — Complement (X-Ray) —
-xray = read_tif(XRAY)
-if xray is not None:
-    xray_gray  = gray(xray)
-    complement = 255 - xray_gray
-    save('lab3_xray_input.png',      xray_gray)
+# — Complement (Intensity Ramp) —
+ramp = read_tif(INTENSITY_RAMP)
+if ramp is not None:
+    ramp_gray  = gray(ramp)
+    complement = 255 - ramp_gray
+    save('lab3_xray_input.png',      ramp_gray)
     save('lab3_xray_complement.png', complement)
 
 # — Gamma (Washed aerial) —
