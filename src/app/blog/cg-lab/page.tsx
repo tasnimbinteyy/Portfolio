@@ -50,7 +50,7 @@ export default function CGLabIndexPage() {
           <p className="text-[10px] text-[#506464] uppercase tracking-widest font-medium mb-4">Course Summary</p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
-              { label: "Total Labs",      value: "9" },
+              { label: "Total Labs",      value: "11" },
               { label: "Tools Used",      value: "Python · OpenGL" },
               { label: "Image Reference", value: "Gonzalez 4th Ed." },
               { label: "Topics",          value: "Graphics · CV · ML" },

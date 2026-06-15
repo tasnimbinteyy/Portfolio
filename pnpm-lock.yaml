@@ -23,6 +23,9 @@ importers:
       react-dom:
         specifier: 19.2.4
         version: 19.2.4(react@19.2.4)
+      tasnim-jannat:
+        specifier: 'link:'
+        version: 'link:'
     devDependencies:
       '@tailwindcss/postcss':
         specifier: ^4

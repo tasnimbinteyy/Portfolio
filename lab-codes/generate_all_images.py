@@ -40,6 +40,7 @@ WOMAN       = gp("DIP3E_CH04_Original_Images", "DIP3E_Original_Images_CH04", "Fi
 FINGERPRINT = gp("DIP3E_CH10_Original_Images", "DIP3E_Original_Images_CH10", "Fig1038(a)(noisy_fingerprint).tif")
 STRAWBERRY  = gp("DIP3E_CH06_Original_Images", "DIP3E_Original_Images_CH06", "Fig0630(01)(strawberries_fullcolor).tif")
 BUILDING    = gp("DIP3E_CH10_Original_Images", "DIP3E_Original_Images_CH10", "Fig1016(a)(building_original).tif")
+SEPTAGON    = gp("DIP3E_CH10_Original_Images", "DIP3E_Original_Images_CH10", "Fig1036(a)(original_septagon).tif")
 LENNA       = gp("DIP3E_CH06_Original_Images", "DIP3E_Original_Images_CH06", "Fig0638(lenna_RGB).tif")
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
@@ -315,14 +316,24 @@ if building is not None:
 
     # LoG
     blurred  = cv2.GaussianBlur(b_gray, (5, 5), 0)
-    log_edge = np.clip(np.abs(cv2.Laplacian(blurred, cv2.CV_64F)), 0, 255).astype(np.uint8)
+    log_raw  = cv2.Laplacian(blurred, cv2.CV_64F)
+    log_abs  = np.abs(log_raw)
+    log_edge = cv2.normalize(log_abs, None, 0, 255, cv2.NORM_MINMAX).astype(np.uint8)
     save('lab9_log.png', log_edge)
 
     # Canny
     canny = cv2.Canny(b_gray, 50, 150)
     save('lab9_canny.png', canny)
 
-    # Comparison grid — input + all 5 detectors
+    # LoG vs Canny comparison (2 panels only)
+    fig, axes = styled_fig(1, 2, (10, 5))
+    axes[0].imshow(log_edge, cmap='gray'); style_ax(axes[0], 'LoG');   axes[0].axis('off')
+    axes[1].imshow(canny,    cmap='gray'); style_ax(axes[1], 'Canny'); axes[1].axis('off')
+    plt.suptitle('LoG vs Canny — Edge Detection', color='#e8e8e4', fontsize=13)
+    plt.tight_layout()
+    save_fig('lab9_log_vs_canny.png')
+
+    # Full comparison grid — input + all 5 detectors
     fig, axes = styled_fig(2, 3, (15, 10))
     pairs = [
         ('Original (Building)', b_gray),
@@ -337,6 +348,59 @@ if building is not None:
     plt.suptitle('Edge Detection — Gonzalez Chapter 10', color='#e8e8e4', fontsize=14)
     plt.tight_layout()
     save_fig('lab9_edges_comparison.png')
+
+# ─────────────────────────────────────────────────────────────────────────────
+# LAB 10 — Boundary & Flood Fill  →  Septagon (Gonzalez Ch10 Fig 10.36)
+# ─────────────────────────────────────────────────────────────────────────────
+print("\n[Lab 10] Boundary & Flood Fill — Septagon")
+sept = read_tif(SEPTAGON)
+if sept is not None:
+    sept_gray = gray(sept)
+    sept_bin  = cv2.threshold(sept_gray, 127, 255, cv2.THRESH_BINARY)[1]
+    save('lab10_septagon_input.png', sept_gray)
+
+    # — Boundary Fill (NumPy-based, iterative using a stack) —
+    def boundary_fill(img_bin, seed_x, seed_y, fill_val=128, border_val=255):
+        out  = img_bin.copy()
+        h, w = out.shape
+        stack = [(seed_x, seed_y)]
+        while stack:
+            x, y = stack.pop()
+            if x < 0 or x >= w or y < 0 or y >= h:
+                continue
+            px = out[y, x]
+            if px == border_val or px == fill_val:
+                continue
+            out[y, x] = fill_val
+            stack += [(x+1,y),(x-1,y),(x,y+1),(x,y-1)]
+        return out
+
+    # — Flood Fill (cv2.floodFill) —
+    def flood_fill(img_bin, seed_x, seed_y, fill_val=128):
+        out  = img_bin.copy()
+        mask = np.zeros((out.shape[0]+2, out.shape[1]+2), np.uint8)
+        cv2.floodFill(out, mask, (seed_x, seed_y), fill_val)
+        return out
+
+    # find a seed point inside the septagon (first white pixel slightly inward)
+    cy, cx = sept_bin.shape[0]//2, sept_bin.shape[1]//2
+    # walk from center until we hit a non-border pixel
+    seed_x, seed_y = cx, cy
+
+    bf_result = boundary_fill(sept_bin, seed_x, seed_y, fill_val=128, border_val=255)
+    ff_result = flood_fill(sept_bin,    seed_x, seed_y, fill_val=128)
+
+    save('lab10_boundary_fill.png', bf_result)
+    save('lab10_flood_fill.png',    ff_result)
+
+    # Comparison figure
+    fig, axes = styled_fig(1, 3, (15, 5))
+    axes[0].imshow(sept_gray,  cmap='gray'); style_ax(axes[0], 'Original Septagon');  axes[0].axis('off')
+    axes[1].imshow(bf_result,  cmap='gray'); style_ax(axes[1], 'Boundary Fill');       axes[1].axis('off')
+    axes[2].imshow(ff_result,  cmap='gray'); style_ax(axes[2], 'Flood Fill');           axes[2].axis('off')
+    plt.suptitle('Lab 10: Boundary & Flood Fill — Gonzalez Fig 10.36', color='#e8e8e4', fontsize=13)
+    plt.tight_layout()
+    save_fig('lab10_fill_comparison.png')
 
 print(f"\n✓ All done! Images saved to:\n  {os.path.abspath(OUT)}")
 print("\nNext: pnpm run dev → check blog images.")

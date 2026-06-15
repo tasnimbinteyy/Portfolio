@@ -179,53 +179,54 @@ export const labImages: Record<string, Record<string, ImageEntry | ImageEntry[]>
 
   // ── LAB 7 — Image + histogram graph separately ──────────────────────────────
   "cg-lab-7-otsu-thresholding": {
-    "what-is-thresholding?": [
-      {
-        type: "image",
-        inputSrc: "/images/cg-lab/lab7_fingerprint_input.png",
-        outputSrc: "/images/cg-lab/lab7_fingerprint_otsu.png",
-        inputLabel: "Noisy Fingerprint (Gonzalez Fig 10.38)",
-        outputLabel: "Otsu Binary Output",
-        caption: "OpenCV THRESH_OTSU finds optimal T automatically — ridges white, valleys black.",
-      },
-      {
-        type: "image",
-        inputSrc: "/images/cg-lab/lab7_fingerprint_input.png",
-        outputSrc: "/images/cg-lab/lab7_otsu_histogram.png",
-        inputLabel: "Fingerprint (grayscale)",
-        outputLabel: "Histogram with Otsu threshold line",
-        caption: "Fingerprint has a bimodal histogram — two clear peaks (ridge vs valley intensity).",
-      },
-    ],
-    "implementation": {
+    "figure-10.36": {
       type: "image",
-      inputSrc: "/images/cg-lab/lab7_fingerprint_input.png",
-      outputSrc: "/images/cg-lab/lab7_otsu_result.png",
-      inputLabel: "Original Fingerprint",
-      outputLabel: "Otsu Binary — side by side result",
-      caption: "Manual Otsu and OpenCV THRESH_OTSU give the same T value — verifies implementation.",
+      inputSrc: "/images/cg-lab/lab7_fig1036.png",
+      outputSrc: "/images/cg-lab/lab7_fig1037.png",
+      inputLabel: "Fig 10.36 — Original septagon + noise variants",
+      outputLabel: "Fig 10.37 — Otsu applied: image, histogram, binary",
+      caption: "Fig 10.36 shows input images with different noise levels. Fig 10.37 shows Otsu result with histogram for each.",
+    },
+    "figure-10.38": {
+      type: "image",
+      inputSrc: "/images/cg-lab/lab7_fig1038.png",
+      outputSrc: "/images/cg-lab/lab7_fig1039.png",
+      inputLabel: "Fig 10.38 — Noisy fingerprint + Otsu result",
+      outputLabel: "Fig 10.39 — Polymersomes + Otsu result",
+      caption: "Fingerprint has a bimodal histogram — ideal for Otsu. Polymersomes shows vesicle separation.",
+    },
+    "figure-10.40": {
+      type: "image",
+      inputSrc: "/images/cg-lab/lab7_fig1040.png",
+      outputSrc: "/images/cg-lab/lab7_fig1041.png",
+      inputLabel: "Fig 10.40 — Large septagon heavy noise (σ=50)",
+      outputLabel: "Fig 10.41 — Small septagon mild noise (σ=10)",
+      caption: "High noise (Fig 10.40) corrupts the histogram — Otsu struggles. Low noise (Fig 10.41) keeps two peaks clear.",
     },
   },
 
   // ── LAB 8 ──────────────────────────────────────────────────────────────────
-  "cg-lab-8-kmeans-clustering": {
-    "k-means-algorithm": [
-      {
+  "cg-lab-8-cohen-sutherland": {
+    "implementation": {
+      type: "image",
+      inputSrc: "/images/cg-lab/lab8_cohen_input.png",
+      outputSrc: "/images/cg-lab/lab8_cohen_output.png",
+      inputLabel: "Lines before clipping — extends outside viewport",
+      outputLabel: "Lines after clipping — only visible portions remain (green)",
+      caption: "Red = original lines, Green = clipped result inside viewport. Dashed red = rejected/trimmed portions.",
+    },
+  },
+
+  // ── LAB 9 ──────────────────────────────────────────────────────────────────
+  "cg-lab-9-kmeans-clustering": {
+    "k-means-algorithm": {
         type: "image",
         inputSrc: "/images/cg-lab/lab8_strawberry_input.png",
         outputSrc: "/images/cg-lab/lab8_kmeans3_output.png",
         inputLabel: "Strawberries (Gonzalez Fig 6.30)",
         outputLabel: "K-Means Segmented (K=3)",
         caption: "K=3 groups pixels into 3 color clusters — red fruit, green leaves, dark background.",
-      },
-      {
-        type: "graph",
-        graphVariant: "scatter",
-        inputLabel: "Pixel RGB values (raw, unsegmented)",
-        outputLabel: "After K-Means — 3 clusters with centroids",
-        caption: "Each dot = a pixel in RGB space. K-Means finds natural color groupings.",
-      },
-    ],
+    },
     "effect-of-k-values": {
       type: "image",
       inputSrc: "/images/cg-lab/lab8_strawberry_input.png",
@@ -236,39 +237,15 @@ export const labImages: Record<string, Record<string, ImageEntry | ImageEntry[]>
     },
   },
 
-  // ── LAB 9 ──────────────────────────────────────────────────────────────────
-  "cg-lab-9-edge-detection": {
-    "roberts-operator": {
-      type: "image",
-      inputSrc: "/images/cg-lab/lab9_building_input.png",
-      outputSrc: "/images/cg-lab/lab9_roberts.png",
-      inputLabel: "Building (Gonzalez Fig 10.16)",
-      outputLabel: "Roberts Edge Output",
-      caption: "2×2 diagonal gradient — fast but very sensitive to noise.",
-    },
-    "prewitt-operator": {
-      type: "image",
-      inputSrc: "/images/cg-lab/lab9_building_input.png",
-      outputSrc: "/images/cg-lab/lab9_prewitt.png",
-      inputLabel: "Building (original)",
-      outputLabel: "Prewitt Edge Output",
-      caption: "3×3 kernel averaging — better noise tolerance than Roberts.",
-    },
-    "sobel-operator": {
-      type: "image",
-      inputSrc: "/images/cg-lab/lab9_building_input.png",
-      outputSrc: "/images/cg-lab/lab9_sobel.png",
-      inputLabel: "Building (original)",
-      outputLabel: "Sobel Edge Output",
-      caption: "Weighted 3×3 — center pixels weighted more, gives stronger cleaner edges.",
-    },
+  // ── LAB 11 ─────────────────────────────────────────────────────────────────
+  "cg-lab-11-edge-detection": {
     "laplacian-of-gaussian": {
       type: "image",
       inputSrc: "/images/cg-lab/lab9_building_input.png",
       outputSrc: "/images/cg-lab/lab9_log.png",
-      inputLabel: "Building (Gaussian pre-blurred)",
+      inputLabel: "Building (Gonzalez Fig 10.16)",
       outputLabel: "LoG Edge Output (zero-crossings)",
-      caption: "Gonzalez Eq 10.3-7 — Gaussian smoothing first, then Laplacian detects zero-crossings.",
+      caption: "Gonzalez Eq 10.3-7 — Gaussian smoothing first, then Laplacian detects edges at zero-crossings.",
     },
     "canny-detector": {
       type: "image",
@@ -281,10 +258,10 @@ export const labImages: Record<string, Record<string, ImageEntry | ImageEntry[]>
     "comparison": {
       type: "image",
       inputSrc: "/images/cg-lab/lab9_building_input.png",
-      outputSrc: "/images/cg-lab/lab9_edges_comparison.png",
+      outputSrc: "/images/cg-lab/lab9_log_vs_canny.png",
       inputLabel: "Building (original)",
-      outputLabel: "All 5 detectors — grid comparison",
-      caption: "Roberts → Prewitt → Sobel → LoG → Canny: increasing edge quality and compute cost.",
+      outputLabel: "LoG vs Canny — side by side",
+      caption: "LoG detects edges via zero-crossings; Canny refines this with non-maximum suppression and hysteresis — producing thinner, more connected edges.",
     },
   },
 };
